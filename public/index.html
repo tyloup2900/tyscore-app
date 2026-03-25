@@ -522,6 +522,8 @@
   </div>
 </footer>
 
-  <script>async function submitWaitlist(){var e=document.getElementById("wl-email").value,m=document.getElementById("wl-msg");if(!e){m.textContent="Enter a valid email.";return;}m.textContent="Submitting...";try{var r=await fetch("/api/waitlist",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,plan:"free",source:"website"})});var d=await r.json();m.textContent=d.message||d.error;}catch(x){m.textContent="Error. Try again.";}}</script>
-</body>
+  <script>
+async function subscribePro(){var e=prompt("Enter your email to subscribe:");if(!e)return;try{var r=await fetch("/api/checkout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,plan:"pro"})});var d=await r.json();if(d.url)window.location.href=d.url;else alert(d.error||"Error");}catch(x){alert("Error. Try again.");}}
+async function joinFree(){var e=prompt("Enter your email for free access:");if(!e)return;try{var r=await fetch("/api/waitlist",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,plan:"free",source:"pricing"})});var d=await r.json();alert(d.message||d.error);}catch(x){alert("Error. Try again.");}}
+  </script></body>
 </html>
