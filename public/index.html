@@ -488,6 +488,7 @@
           <li>Community support</li>
         </ul>
         <button onclick="joinFree()" class="btn btn-secondary" style="width:100%;text-align:center;cursor:pointer;border:none">Join Free</button>
+      </div>
       <div class="price-card featured">
         <h3>Pro</h3>
         <div class="price">$49<span>/mo</span></div>
@@ -502,6 +503,23 @@
           <li>Priority support</li>
         </ul>
         <button onclick="subscribePro()" class="btn btn-primary" style="width:100%;text-align:center;cursor:pointer;border:none">Subscribe Pro - $49/mo</button>
+      </div>
+      <div class="price-card">
+        <h3>Enterprise</h3>
+        <div class="price">Custom</div>
+        <ul>
+          <li>Everything in Pro</li>
+          <li>Ramp-ready certification</li>
+          <li>Financial clearance levels</li>
+          <li>Custom guardian assessment</li>
+          <li>On-premise deployment</li>
+          <li>Dedicated support</li>
+        </ul>
+        <a href="mailto:cyril.jeannes@gmail.com" class="btn btn-secondary" style="width:100%;text-align:center;">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section class="foundation">
   <div class="container">
@@ -521,7 +539,10 @@
   </div>
 </footer>
 
-  <script>
+<script>
+async function submitWaitlist(){var e=document.getElementById("wl-email").value,m=document.getElementById("wl-msg");if(!e){m.textContent="Enter a valid email.";return;}m.textContent="Submitting...";try{var r=await fetch("/api/waitlist",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,plan:"free",source:"website"})});var d=await r.json();m.textContent=d.message||d.error;}catch(x){m.textContent="Error. Try again.";}}
 async function subscribePro(){var e=prompt("Enter your email to subscribe:");if(!e)return;try{var r=await fetch("/api/checkout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,plan:"pro"})});var d=await r.json();if(d.url)window.location.href=d.url;else alert(d.error||"Error");}catch(x){alert("Error. Try again.");}}
 async function joinFree(){var e=prompt("Enter your email for free access:");if(!e)return;try{var r=await fetch("/api/register-free",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e})});var d=await r.json();if(d.api_key)prompt("Your API key (copy it now):",d.api_key);else alert(d.error||"Error");}catch(x){alert("Error. Try again.");}}
+</script>
+</body>
 </html>
