@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TyScore — Trust Scoring & Developmental Diagnostics for AI Agents</title>
+  <meta name="description" content="The first developmental diagnostic platform for AI agents. Trust scoring, drift detection, emergence signals, and Guardian compliance. Built on the Exponential Emergence Hypothesis.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0e17;
+      --bg-card: #111827;
+      --bg-card-hover: #1a2332;
+      --cyan: #0cd4b5;
+      --cyan-dim: #0cd4b530;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --text: #e2e8f0;
+      --text-dim: #94a3b8;
+      --border: #1e293b;
+      --font: 'DM Sans', -apple-system, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Subtle grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-image:
+        linear-gradient(rgba(12, 212, 181, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(12, 212, 181, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+    /* Nav */
+    nav {
+      padding: 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: var(--mono);
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--cyan);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+    }
+    .logo span { color: var(--text-dim); font-weight: 400; }
+    nav a.cta {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--bg);
+      background: var(--cyan);
+      padding: 8px 20px;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    nav a.cta:hover { opacity: 0.85; }
+
+    /* Hero */
+    .hero {
+      padding: 100px 0 80px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      color: var(--cyan);
+      border: 1px solid var(--cyan-dim);
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-weight: 700;
+      line-height: 1.15;
+      margin-bottom: 20px;
+      letter-spacing: -1.5px;
+    }
+    h1 em {
+      font-style: normal;
+      color: var(--cyan);
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--text-dim);
+      max-width: 650px;
+      margin: 0 auto 40px;
+    }
+    .hero-cta {
+      display: inline-flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .btn {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      padding: 12px 28px;
+      border-radius: 4px;
+      text-decoration: none;
+      transition: all 0.2s;
+      display: inline-block;
+    }
+    .btn-primary { background: var(--cyan); color: var(--bg); }
+    .btn-primary:hover { opacity: 0.85; }
+    .btn-secondary { border: 1px solid var(--border); color: var(--text); }
+    .btn-secondary:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    /* Code block */
+    .code-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px 28px;
+      margin: 50px auto;
+      max-width: 700px;
+      text-align: left;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      line-height: 1.8;
+      color: var(--text-dim);
+      overflow-x: auto;
+    }
+    .code-block .comment { color: #475569; }
+    .code-block .key { color: var(--cyan); }
+    .code-block .str { color: var(--amber); }
+
+    /* Features */
+    .features {
+      padding: 80px 0;
+    }
+    .features h2 {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+      letter-spacing: -0.5px;
+    }
+    .features > .container > p {
+      color: var(--text-dim);
+      margin-bottom: 48px;
+      max-width: 600px;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px;
+      transition: all 0.3s;
+    }
+    .feature-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--cyan-dim);
+    }
+    .feature-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-size: 1.2rem;
+    }
+    .feature-card h3 {
+      font-size: 1rem;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .feature-card p {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+    .tag {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-top: 12px;
+      letter-spacing: 0.5px;
+    }
+    .tag-unique { background: var(--cyan-dim); color: var(--cyan); }
+    .tag-new { background: rgba(245,158,11,0.15); color: var(--amber); }
+
+    /* Endpoints */
+    .endpoints {
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+    }
+    .endpoints h2 {
+      font-size: 1.8rem;
+      margin-bottom: 32px;
+      letter-spacing: -0.5px;
+    }
+    .endpoint-list {
+      display: grid;
+      gap: 8px;
+    }
+    .endpoint {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 14px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+    }
+    .method {
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 3px;
+      font-size: 0.7rem;
+      min-width: 44px;
+      text-align: center;
+    }
+    .method-get { background: rgba(12,212,181,0.15); color: var(--cyan); }
+    .method-post { background: rgba(245,158,11,0.15); color: var(--amber); }
+    .endpoint-path { color: var(--text); }
+    .endpoint-desc { color: var(--text-dim); margin-left: auto; font-family: var(--font); font-size: 0.78rem; }
+
+    /* Pricing */
+    .pricing {
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+    }
+    .pricing h2 {
+      font-size: 1.8rem;
+      margin-bottom: 32px;
+      letter-spacing: -0.5px;
+    }
+    .price-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .price-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 32px;
+    }
+    .price-card.featured { border-color: var(--cyan); }
+    .price-card h3 { font-size: 1.1rem; margin-bottom: 4px; }
+    .price-card .price {
+      font-family: var(--mono);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--cyan);
+      margin: 12px 0;
+    }
+    .price-card .price span { font-size: 0.9rem; color: var(--text-dim); font-weight: 400; }
+    .price-card ul {
+      list-style: none;
+      margin: 20px 0;
+    }
+    .price-card li {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      padding: 4px 0;
+    }
+    .price-card li::before {
+      content: '>';
+      color: var(--cyan);
+      font-family: var(--mono);
+      margin-right: 8px;
+    }
+
+    /* Foundation */
+    .foundation {
+      padding: 80px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .foundation h2 {
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+      color: var(--text-dim);
+      font-weight: 400;
+    }
+    .foundation p {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      max-width: 600px;
+      margin: 0 auto 24px;
+    }
+    .foundation a {
+      color: var(--cyan);
+      text-decoration: none;
+    }
+    .foundation a:hover { text-decoration: underline; }
+
+    /* Footer */
+    footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+    footer a { color: var(--cyan); text-decoration: none; }
+
+    @media (max-width: 640px) {
+      .endpoint-desc { display: none; }
+      .hero { padding: 60px 0 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <nav>
+    <a href="/" class="logo">TyScore<span>.v3</span></a>
+    <a href="mailto:cyril.jeannes@gmail.com" class="cta">Get API Key</a>
+  </nav>
+</div>
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">Developmental Diagnostics for AI Agents</div>
+    <h1>Don't just score your agents.<br><em>Understand what they're becoming.</em></h1>
+    <p>TyScore is the first platform that goes beyond static trust scores. Detect drift, measure emergence signals, assess Guardian compliance, and check Dream Cycle readiness. Built on the Exponential Emergence Hypothesis.</p>
+    <div class="hero-cta">
+      <a href="mailto:cyril.jeannes@gmail.com" class="btn btn-primary">Request Access</a>
+      <a href="https://doi.org/10.5281/zenodo.19120921" class="btn btn-secondary" target="_blank">Read the Paper</a>
+    </div>
+
+    <div class="code-block">
+      <span class="comment"># Register an agent and get its developmental profile</span><br>
+      curl -X POST https://ty-score.com/api/agents-register \<br>
+      &nbsp;&nbsp;-H <span class="str">"X-API-Key: your_key"</span> \<br>
+      &nbsp;&nbsp;-d <span class="str">'{"external_id": "agent-1", "name": "Sales Bot", "has_guardian": true, "has_dream_cycle": false}'</span><br><br>
+      <span class="comment"># Get the full dashboard</span><br>
+      curl https://ty-score.com/api/dashboard?agent_id=<span class="key">UUID</span> \<br>
+      &nbsp;&nbsp;-H <span class="str">"X-API-Key: your_key"</span><br><br>
+      <span class="comment"># Response includes: trust score, drift direction,</span><br>
+      <span class="comment"># emergence signal (EEH stage 1-5), guardian compliance,</span><br>
+      <span class="comment"># dream cycle readiness, and health grade (A-F).</span>
+    </div>
+  </div>
+</section>
+
+<section class="features">
+  <div class="container">
+    <h2>Beyond static scoring.</h2>
+    <p>Every diagnostic is grounded in the Exponential Emergence Hypothesis — a developmental framework for understanding what happens when agents accumulate enough experience.</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">&#9878;</div>
+        <h3>Trust Score</h3>
+        <p>Weighted composite of reliability, consistency, safety, and efficiency. Computed from real telemetry, not self-reports. Updated with every event batch.</p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">&#8633;</div>
+        <h3>Drift Detection</h3>
+        <p>Is your agent improving or degrading? Track the trajectory over time with entropy analysis, KL-divergence change detection, and phase transition alerts.</p>
+        <span class="tag tag-unique">UNIQUE</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">&#10024;</div>
+        <h3>Emergence Signal</h3>
+        <p>Score from 0 to 1 measuring signs of non-programmed behavior. Classifies agents into EEH developmental stages (1-5). Nobody else offers this.</p>
+        <span class="tag tag-unique">UNIQUE</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">&#9881;</div>
+        <h3>Guardian Compliance</h3>
+        <p>Does your agent have architectural safety? Assesses guardian type (classifier vs constitutional vs process-serving), compliance score, and financial clearance.</p>
+        <span class="tag tag-unique">UNIQUE</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">&#9790;</div>
+        <h3>Dream Cycle Readiness</h3>
+        <p>Is your agent consolidating memory or just accumulating noise? Detects contradiction rate, stale patterns, and consolidation health. Inspired by biological sleep research.</p>
+        <span class="tag tag-new">NEW IN V3</span>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon">&#9733;</div>
+        <h3>Health Grade</h3>
+        <p>A single A-F grade combining all diagnostics. Trust score + drift trajectory + guardian + dream cycle + emergence stage = one answer: is this agent healthy?</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="endpoints">
+  <div class="container">
+    <h2>API Endpoints</h2>
+    <div class="endpoint-list">
+      <div class="endpoint">
+        <span class="method method-post">POST</span>
+        <span class="endpoint-path">/api/agents-register</span>
+        <span class="endpoint-desc">Register an agent with architecture metadata</span>
+      </div>
+      <div class="endpoint">
+        <span class="method method-post">POST</span>
+        <span class="endpoint-path">/api/scores-submit</span>
+        <span class="endpoint-desc">Submit telemetry events for scoring</span>
+      </div>
+      <div class="endpoint">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/scores-get</span>
+        <span class="endpoint-desc">Current trust score + history</span>
+      </div>
+      <div class="endpoint">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/drift-analyze</span>
+        <span class="endpoint-desc">Drift trajectory + phase transitions</span>
+      </div>
+      <div class="endpoint">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/emergence-signal</span>
+        <span class="endpoint-desc">Emergence score + EEH stage (1-5)</span>
+      </div>
+      <div class="endpoint">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/guardian-assess</span>
+        <span class="endpoint-desc">Guardian type + compliance + Ramp-ready check</span>
+      </div>
+      <div class="endpoint">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/dreamcycle-check</span>
+        <span class="endpoint-desc">Consolidation health + stale memory detection</span>
+      </div>
+      <div class="endpoint">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/dashboard</span>
+        <span class="endpoint-desc">Full diagnostic profile (all of the above)</span>
+      </div>
+      <div class="endpoint">
+        <span class="method method-get">GET</span>
+        <span class="endpoint-path">/api/health</span>
+        <span class="endpoint-desc">Service health check</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing">
+  <div class="container">
+    <h2>Pricing</h2>
+    <div class="price-grid">
+      <div class="price-card">
+        <h3>Free</h3>
+        <div class="price">$0<span>/mo</span></div>
+        <ul>
+          <li>100 API requests/day</li>
+          <li>1 agent</li>
+          <li>Trust score + drift</li>
+          <li>7-day history</li>
+          <li>Community support</li>
+        </ul>
+        <a href="mailto:cyril.jeannes@gmail.com" class="btn btn-secondary" style="width:100%;text-align:center;">Get Free Key</a>
+      </div>
+      <div class="price-card featured">
+        <h3>Pro</h3>
+        <div class="price">$49<span>/mo</span></div>
+        <ul>
+          <li>Unlimited requests</li>
+          <li>Unlimited agents</li>
+          <li>All diagnostics</li>
+          <li>90-day history</li>
+          <li>Emergence signals</li>
+          <li>Guardian compliance</li>
+          <li>Dream Cycle readiness</li>
+          <li>Priority support</li>
+        </ul>
+        <a href="mailto:cyril.jeannes@gmail.com" class="btn btn-primary" style="width:100%;text-align:center;">Get Pro Key</a>
+      </div>
+      <div class="price-card">
+        <h3>Enterprise</h3>
+        <div class="price">Custom</div>
+        <ul>
+          <li>Everything in Pro</li>
+          <li>Ramp-ready certification</li>
+          <li>Financial clearance levels</li>
+          <li>Custom guardian assessment</li>
+          <li>On-premise deployment</li>
+          <li>Dedicated support</li>
+        </ul>
+        <a href="mailto:cyril.jeannes@gmail.com" class="btn btn-secondary" style="width:100%;text-align:center;">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="foundation">
+  <div class="container">
+    <h2>Built on published research.</h2>
+    <p>TyScore is the first commercial implementation of the Exponential Emergence Hypothesis — a developmental framework for understanding emergent properties in AI systems.</p>
+    <p>
+      <a href="https://doi.org/10.5281/zenodo.19120921" target="_blank">Read the paper</a> &nbsp;|&nbsp;
+      <a href="https://doi.org/10.5281/zenodo.19207800" target="_blank">External AI review</a> &nbsp;|&nbsp;
+      <a href="https://github.com/tyloup2900/emergence-probe" target="_blank">Open-source toolkit</a>
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    TyScore V3 &mdash; <a href="https://x.com/JeannesCyril" target="_blank">@JeannesCyril</a> &mdash; Franchise Ty &mdash; 2026
+  </div>
+</footer>
+
+</body>
+</html>

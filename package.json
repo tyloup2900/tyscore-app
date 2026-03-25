@@ -1,0 +1,10 @@
+{
+  "name": "tyscore-v3",
+  "version": "3.0.0",
+  "description": "Trust Scoring & Developmental Diagnostics for AI Agents",
+  "author": "Cyril François Jeannes",
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  }
+}
