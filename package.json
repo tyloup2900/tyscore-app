@@ -5,6 +5,7 @@
   "author": "Cyril François Jeannes",
   "license": "MIT",
   "dependencies": {
-    "@supabase/supabase-js": "^2.39.0"
+    "@supabase/supabase-js": "^2.39.0",
+    "stripe": "^20.4.1"
   }
 }
