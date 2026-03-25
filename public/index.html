@@ -523,6 +523,5 @@
 
   <script>
 async function subscribePro(){var e=prompt("Enter your email to subscribe:");if(!e)return;try{var r=await fetch("/api/checkout",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,plan:"pro"})});var d=await r.json();if(d.url)window.location.href=d.url;else alert(d.error||"Error");}catch(x){alert("Error. Try again.");}}
-async function joinFree(){var e=prompt("Enter your email for free access:");if(!e)return;try{var r=await fetch("/api/waitlist",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,plan:"free",source:"pricing"})});var d=await r.json();alert(d.message||d.error);}catch(x){alert("Error. Try again.");}}
-  </script></body>
+async function joinFree(){var e=prompt("Enter your email for free access:");if(!e)return;try{var r=await fetch("/api/register-free",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e})});var d=await r.json();if(d.api_key)prompt("Your API key (copy it now):",d.api_key);else alert(d.error||"Error");}catch(x){alert("Error. Try again.");}}
 </html>
