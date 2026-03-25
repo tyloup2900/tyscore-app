@@ -539,5 +539,6 @@
   </div>
 </footer>
 
+  <script>async function submitWaitlist(){var e=document.getElementById("wl-email").value,m=document.getElementById("wl-msg");if(!e){m.textContent="Enter a valid email.";return;}m.textContent="Submitting...";try{var r=await fetch("/api/waitlist",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email:e,plan:"free",source:"website"})});var d=await r.json();m.textContent=d.message||d.error;}catch(x){m.textContent="Error. Try again.";}}</script>
 </body>
 </html>
