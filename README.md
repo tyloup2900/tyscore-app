@@ -39,7 +39,7 @@ sql/
 - Open SQL Editor → paste contents of `sql/TYSCORE_V3_SCHEMA.sql` → Run
 - Copy your Project URL and service_role key
 
-2. Netlify Setup (auto-deploy via GitHub)
+### 2. Netlify Setup (auto-deploy via GitHub)
 - Link site to GitHub repo: tyloup2900/tyscore-app
 - Build command: npm install
 - Publish directory: public
