@@ -23,6 +23,10 @@ netlify/functions/
   guardian-assess.js       GET  /api/guardian-assess?agent_id=
   dreamcycle-check.js     GET  /api/dreamcycle-check?agent_id=
   dashboard.js            GET  /api/dashboard?agent_id=
+waitlist.js             POST /api/waitlist
+  register-free.js        POST /api/register-free
+  checkout.js             POST /api/checkout (Stripe)
+  stripe-webhook.js       POST /api/stripe-webhook
 
 sql/
   TYSCORE_V3_SCHEMA.sql   8 tables, indexes, cleanup function
@@ -35,15 +39,17 @@ sql/
 - Open SQL Editor → paste contents of `sql/TYSCORE_V3_SCHEMA.sql` → Run
 - Copy your Project URL and service_role key
 
-### 2. Netlify Setup
-- Install dependencies: `npm install`
-- Set environment variables on Netlify:
-  - `SUPABASE_URL` = your project URL
-  - `SUPABASE_SERVICE_KEY` = your service_role key
-- Deploy:
-  ```bash
-  npx netlify-cli deploy --prod --site 6c4d6d2f-a8b4-40bd-9ee6-a90a25e5a050
-  ```
+2. Netlify Setup (auto-deploy via GitHub)
+- Link site to GitHub repo: tyloup2900/tyscore-app
+- Build command: npm install
+- Publish directory: public
+- Functions directory: netlify/functions
+- Set environment variables:
+  - SUPABASE_URL
+  - SUPABASE_SERVICE_KEY
+  - STRIPE_SECRET_KEY
+  - STRIPE_PRICE_ID
+- Every push to main auto-deploys
 
 ### 3. DNS (already configured)
 - CNAME: ty-score.com → tyscore-app.netlify.app
@@ -82,3 +88,7 @@ Then use `X-API-Key: your-secret-api-key-here` in requests.
 
 ## License
 MIT
+## Onboarding (fully automated)
+- Free: Click → email → API key generated instantly
+- Pro: Click → email → Stripe checkout → payment → API key auto-created
+- Enterprise: Contact sales (cyril.jeannes@gmail.com)
