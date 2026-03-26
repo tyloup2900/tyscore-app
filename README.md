@@ -23,7 +23,7 @@ netlify/functions/
   guardian-assess.js       GET  /api/guardian-assess?agent_id=
   dreamcycle-check.js     GET  /api/dreamcycle-check?agent_id=
   dashboard.js            GET  /api/dashboard?agent_id=
-waitlist.js             POST /api/waitlist
+  waitlist.js             POST /api/waitlist
   register-free.js        POST /api/register-free
   checkout.js             POST /api/checkout (Stripe)
   stripe-webhook.js       POST /api/stripe-webhook
